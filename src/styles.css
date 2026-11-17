@@ -1159,3 +1159,11 @@ button {
   color: var(--ink-soft);
   line-height: 1.2;
 }
+
+.howto-modes {
+  justify-content: center;
+}
+.howto-mode-sub {
+  text-align: center;
+  margin: 8px 0 0;
+}

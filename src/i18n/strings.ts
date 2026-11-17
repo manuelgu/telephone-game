@@ -134,13 +134,22 @@ const en = {
   waitGuess: '{name} is guessing…',
   upNext: 'Up next: {name}',
   youreNext: 'You’re next – get ready!',
-  howToSteps: [
-    'Everyone picks a secret word for their own book.',
-    'Pass the device: the next player draws the word they see.',
-    'The next player only sees the drawing and writes down a guess.',
-    'Draw, guess, draw, guess… until every book comes home.',
-    'Flip through the books together and laugh at how things changed!',
-  ],
+  howToSteps: {
+    pass: [
+      'Sit in a circle and add everyone’s name in seating order.',
+      'Everyone picks a secret word for their own book – the app tells you when to hand the device on.',
+      'Pass the device: the next player only sees the word and draws it.',
+      'The next player only sees the drawing and writes down a guess. Draw, guess, draw… until every book comes home.',
+      'Flip through the books together and laugh at how things changed!',
+    ],
+    online: [
+      'One player hosts a room and shares the code or QR code – everyone joins on their own phone or iPad.',
+      'Everyone picks a secret word for their own book at the same time.',
+      'The books move on by themselves: you draw the word you get on your own screen.',
+      'Next round you only see a drawing and write down a guess. Draw, guess, draw… until every book comes home.',
+      'The host flips through the books and everyone’s screen follows along – laugh at how things changed!',
+    ],
+  },
   tipPencil: 'On iPad: use Apple Pencil for pressure-sensitive lines. Two-finger tap to undo.',
 }
 
@@ -280,13 +289,22 @@ const de: Strings = {
   waitGuess: '{name} rät…',
   upNext: 'Als Nächstes: {name}',
   youreNext: 'Du bist als Nächstes dran – mach dich bereit!',
-  howToSteps: [
-    'Jeder wählt ein geheimes Wort für sein eigenes Buch.',
-    'Gerät weitergeben: Der nächste Spieler zeichnet das Wort.',
-    'Der nächste sieht nur die Zeichnung und schreibt seine Vermutung auf.',
-    'Zeichnen, raten, zeichnen, raten… bis jedes Buch zurück ist.',
-    'Blättert gemeinsam durch die Bücher und lacht, was daraus wurde!',
-  ],
+  howToSteps: {
+    pass: [
+      'Setzt euch in einen Kreis und tragt alle Namen in Sitzreihenfolge ein.',
+      'Jeder wählt ein geheimes Wort für sein eigenes Buch – die App sagt euch, wann das Gerät weitergeht.',
+      'Gerät weitergeben: Der nächste sieht nur das Wort und zeichnet es.',
+      'Der nächste sieht nur die Zeichnung und schreibt seine Vermutung auf. Zeichnen, raten, zeichnen… bis jedes Buch zurück ist.',
+      'Blättert gemeinsam durch die Bücher und lacht, was daraus wurde!',
+    ],
+    online: [
+      'Eine Person erstellt einen Raum und teilt den Code oder QR-Code – alle treten mit dem eigenen Handy oder iPad bei.',
+      'Alle wählen gleichzeitig ein geheimes Wort für ihr eigenes Buch.',
+      'Die Bücher wandern von selbst weiter: Du zeichnest das Wort, das auf deinem Bildschirm erscheint.',
+      'In der nächsten Runde siehst du nur eine Zeichnung und schreibst deine Vermutung auf. Zeichnen, raten, zeichnen… bis jedes Buch zurück ist.',
+      'Der Host blättert durch die Bücher und alle Bildschirme blättern mit – lacht, was daraus wurde!',
+    ],
+  },
   tipPencil: 'Auf dem iPad: Apple Pencil für druckempfindliche Linien. Zwei-Finger-Tipp = Rückgängig.',
 }
 
@@ -424,13 +442,22 @@ const sv: Strings = {
   waitGuess: '{name} gissar…',
   upNext: 'Näst på tur: {name}',
   youreNext: 'Du är näst på tur – gör dig redo!',
-  howToSteps: [
-    'Alla väljer ett hemligt ord till sin egen bok.',
-    'Skicka enheten vidare: nästa spelare ritar ordet.',
-    'Nästa ser bara teckningen och skriver en gissning.',
-    'Rita, gissa, rita, gissa… tills varje bok har kommit hem.',
-    'Bläddra igenom böckerna tillsammans och skratta åt resultatet!',
-  ],
+  howToSteps: {
+    pass: [
+      'Sätt er i en ring och skriv in allas namn i sittordning.',
+      'Alla väljer ett hemligt ord till sin egen bok – appen säger till när enheten ska skickas vidare.',
+      'Skicka enheten vidare: nästa spelare ser bara ordet och ritar det.',
+      'Nästa ser bara teckningen och skriver en gissning. Rita, gissa, rita… tills varje bok har kommit hem.',
+      'Bläddra igenom böckerna tillsammans och skratta åt resultatet!',
+    ],
+    online: [
+      'En spelare skapar ett rum och delar koden eller QR-koden – alla går med på sin egen mobil eller iPad.',
+      'Alla väljer samtidigt ett hemligt ord till sin egen bok.',
+      'Böckerna skickas vidare av sig själva: du ritar ordet som dyker upp på din skärm.',
+      'Nästa runda ser du bara en teckning och skriver en gissning. Rita, gissa, rita… tills varje bok har kommit hem.',
+      'Värden bläddrar i böckerna och allas skärmar följer med – skratta åt resultatet!',
+    ],
+  },
   tipPencil: 'På iPad: använd Apple Pencil för tryckkänsliga linjer. Tryck med två fingrar för att ångra.',
 }
 
