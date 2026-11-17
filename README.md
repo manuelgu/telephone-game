@@ -45,6 +45,7 @@ npm install
 npm run dev          # Vite + local Worker/Durable Object (workerd) on http://localhost:5173, also on your LAN
 npm test             # game-logic unit tests
 npm run test:online  # protocol end-to-end test (needs `npm run dev` running; BASE=http://localhost:5173)
+npm run test:offline # after `npm run build`: caches the app, kills the server, plays a full pass & play game offline
 npm run build        # typecheck app + worker, build client and worker
 npm run cf-typegen   # regenerate worker/worker-configuration.d.ts after editing wrangler.jsonc
 ```
