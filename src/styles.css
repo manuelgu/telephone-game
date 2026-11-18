@@ -485,18 +485,33 @@ button {
 }
 
 .guess-turn {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-areas: 'head' 'view' 'input';
+  justify-items: center;
+  gap: 12px;
   padding-top: 4px;
 }
 .guess-head {
+  grid-area: head;
   display: flex;
   align-items: center;
   gap: 12px;
 }
+.guess-view {
+  grid-area: view;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
 .guess-image {
-  width: min(100%, 60dvh);
-  aspect-ratio: 1;
   overflow: hidden;
-  flex: none;
   background: #fff;
 }
 .guess-image img {
@@ -510,15 +525,18 @@ button {
   display: grid;
   place-items: center;
 }
-/* writing mode: smaller drawing so the pad fits below it */
-.guess-writing .guess-image {
-  width: min(100%, 40dvh);
+.guess-input {
+  grid-area: input;
+  width: min(100%, 760px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 .guess-modes {
   justify-content: center;
 }
 .write-pad-wrap {
-  width: min(100%, 720px);
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -538,6 +556,19 @@ button {
   color: var(--ink-soft);
   font-size: 1.3rem;
   pointer-events: none;
+}
+/* landscape (iPad sideways): drawing on the left at full height, guess on the right */
+@media (min-aspect-ratio: 1/1) and (min-width: 700px) {
+  .guess-turn {
+    grid-template-columns: minmax(0, 1fr) min(45%, 560px);
+    grid-template-rows: minmax(0, 1fr) auto auto minmax(0, 1fr);
+    grid-template-areas: 'view .' 'view head' 'view input' 'view .';
+    align-items: center;
+    column-gap: 20px;
+  }
+  .guess-input {
+    width: 100%;
+  }
 }
 .write-pad-actions {
   display: flex;
