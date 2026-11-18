@@ -53,6 +53,10 @@ input {
   user-select: text;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 h1,
 h2 {
   margin: 0;
@@ -506,6 +510,41 @@ button {
   display: grid;
   place-items: center;
 }
+/* writing mode: smaller drawing so the pad fits below it */
+.guess-writing .guess-image {
+  width: min(100%, 40dvh);
+}
+.guess-modes {
+  justify-content: center;
+}
+.write-pad-wrap {
+  width: min(100%, 720px);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.write-pad {
+  position: relative;
+  aspect-ratio: 1024 / 384;
+  padding: 0;
+  overflow: hidden;
+  background: #fff;
+}
+.write-pad-hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--ink-soft);
+  font-size: 1.3rem;
+  pointer-events: none;
+}
+.write-pad-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
 
 .timer {
   display: inline-flex;
@@ -849,6 +888,30 @@ button {
   width: 55%;
   border: 2px solid var(--line);
   border-radius: 8px;
+}
+.page-handwriting,
+.summary-handwriting {
+  max-width: min(100%, 640px);
+  max-height: 45%;
+  object-fit: contain;
+  padding: 8px;
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  -webkit-user-drag: none;
+}
+.summary-handwriting {
+  max-width: min(80%, 480px);
+  max-height: 30%;
+}
+.prompt-handwriting {
+  display: block;
+  align-self: flex-start;
+  height: 72px;
+  max-width: 100%;
+  object-fit: contain;
+  background: #fff;
+  border-radius: 6px;
 }
 .viewer-controls {
   display: flex;

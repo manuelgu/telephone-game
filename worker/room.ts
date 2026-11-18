@@ -86,7 +86,7 @@ export class Room extends DurableObject<Env> {
         status: 'lobby',
         hostId: '',
         players: [],
-        settings: { timer: 90, turns: 0, lang: (url.searchParams.get('lang') as Lang) ?? 'en', style: 'books' },
+        settings: { timer: 30, turns: 0, lang: (url.searchParams.get('lang') as Lang) ?? 'en', style: 'books' },
         step: 0,
         stepEndsAt: null,
         submitted: [],
@@ -244,12 +244,19 @@ export class Room extends DurableObject<Env> {
         const book = this.bookFor(me.id)
         const kind = pageKindForStep(step)
         const page: PageMeta = { kind, authorId: me.id, createdAt: Date.now(), timedOut: !!msg.timedOut }
-        if (kind === 'drawing') {
-          if (typeof msg.image === 'string' && msg.image.length < MAX_IMAGE_CHARS && IMAGE_DATA_URL.test(msg.image)) {
-            await this.ctx.storage.put(imgKey(book, step), msg.image)
-            page.hasImage = true
-          }
-        } else {
+        // drawings, and guesses written by hand, carry an image
+        const image =
+          kind !== 'word' &&
+          typeof msg.image === 'string' &&
+          msg.image.length < MAX_IMAGE_CHARS &&
+          IMAGE_DATA_URL.test(msg.image)
+            ? msg.image
+            : undefined
+        if (image) {
+          await this.ctx.storage.put(imgKey(book, step), image)
+          page.hasImage = true
+        }
+        if (kind !== 'drawing') {
           page.text = String(msg.text ?? '').trim().slice(0, 80)
           if (kind === 'word' && !page.text) page.text = this.randomWord()
         }

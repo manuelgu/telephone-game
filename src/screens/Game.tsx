@@ -95,6 +95,7 @@ export function GameScreen() {
         <DrawTurn
           key={key}
           prompt={turn.previous?.text ?? ''}
+          promptImage={turn.previous?.kind === 'guess' ? turn.previous.image : undefined}
           timer={game.settings.timer}
           onSubmit={(image, timedOut) => handleSubmit({ image, timedOut })}
         />
@@ -104,7 +105,7 @@ export function GameScreen() {
           key={key}
           image={turn.previous?.image}
           timer={game.settings.timer}
-          onSubmit={(text, timedOut) => handleSubmit({ text, timedOut })}
+          onSubmit={(guess, timedOut) => handleSubmit({ ...guess, timedOut })}
         />
       )}
 

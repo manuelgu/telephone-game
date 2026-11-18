@@ -111,11 +111,16 @@ assert(players.every((x) => x.turn.previous.image === IMG), 'guessers receive th
 
 // host skips Cleo on step 2
 a.send({ t: 'submit', step: 2, text: 'guess A' })
-b.send({ t: 'submit', step: 2, text: 'guess B' })
+// Ben writes his guess by hand
+b.send({ t: 'submit', step: 2, text: '', image: IMG })
 await sleep(100)
 a.send({ t: 'skipWaiting', step: 2 })
 await until(() => players.every((x) => x.turn?.kind === 'drawing' && x.turn.step === 3), 'step 3')
 assert(true, 'host skipped waiting player')
+assert(
+  players.some((x) => x.turn.previous?.kind === 'guess' && x.turn.previous.image === IMG),
+  'drawer receives the handwritten guess',
+)
 for (const p of players) p.send({ t: 'submit', step: 3, image: IMG })
 await until(() => a.state.status === 'reveal', 'reveal')
 assert(a.state.books.length === 3 && a.state.books.every((bk) => bk.pages.length === 4), '3 books x 4 pages')
@@ -123,6 +128,8 @@ const annaBook = a.state.books.find((bk) => bk.ownerId === a.id)
 assert(annaBook.pages[3].authorId === a.id, 'book returns to owner on last step')
 const skipped = a.state.books.flatMap((bk) => bk.pages).find((p) => p.timedOut)
 assert(skipped && skipped.authorId === c.id, 'skipped page marked timedOut')
+const written = a.state.books.flatMap((bk) => bk.pages).find((p) => p.kind === 'guess' && p.authorId === b.id)
+assert(written?.hasImage === true && written.text === '', 'handwritten guess stored as image')
 
 const imgRes = await fetch(`${BASE}/api/rooms/${code}/img/0/1`)
 assert(imgRes.ok && imgRes.headers.get('content-type') === 'image/png', 'image served after reveal')

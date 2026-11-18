@@ -17,7 +17,8 @@ Pick a style in both modes. The default is the first one.
 ## How a game works (everyone has a book)
 
 1. Step 0: each player picks a secret starting word for their own book (4 suggested cards, one reshuffle, or their own).
-2. Steps 1…N: player `p` works on book `(p − step) mod N`. Odd steps are drawings, even steps are guesses. On a full circle each book comes back to its owner for the last guess.
+2. Steps 1…N: player `p` works on book `(p − step) mod N`. Odd steps are drawings, even steps are guesses. On a full circle each book comes back to its owner for the last guess. A guess can be typed or written by hand (Apple Pencil or finger); handwriting is saved as a picture and shown to the next drawer and in the reveal.
+   The turn timer can be off, 15s, 30s (default), 45s, 1, 1½, 2 or 3 minutes.
 3. Reveal: the books are flipped through page by page, ending each book with "started as → ended as". Finished games are saved to the device's history, drawings included.
 
 ### Online specifics

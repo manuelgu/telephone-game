@@ -96,7 +96,7 @@ export function BookViewer({
   }
 
   const firstText = book.pages[0]?.text ?? ''
-  const lastText = [...book.pages].reverse().find((p) => p.kind !== 'drawing')?.text
+  const lastWords = [...book.pages].reverse().find((p) => p.kind !== 'drawing')
   const lastPage = book.pages[book.pages.length - 1]
 
   return (
@@ -138,8 +138,10 @@ export function BookViewer({
               <p className="muted">{t('endedAs')}</p>
               {lastPage?.kind === 'drawing' && lastPage.image ? (
                 <img className="summary-img" src={lastPage.image} alt="" />
+              ) : lastWords?.image ? (
+                <img className="summary-handwriting" src={lastWords.image} alt="" />
               ) : (
-                <p className="summary-word">{lastText || t('nothing')}</p>
+                <p className="summary-word">{lastWords?.text || t('nothing')}</p>
               )}
             </div>
           )}
@@ -190,6 +192,8 @@ function PageView({ game, page }: { game: Game; page: Page }) {
       </p>
       {page.kind === 'drawing' && page.image ? (
         <img className="page-img" src={page.image} alt="" draggable={false} />
+      ) : page.image ? (
+        <img className="page-handwriting" src={page.image} alt="" draggable={false} />
       ) : (
         <p className="page-text">{page.text || t('nothing')}</p>
       )}

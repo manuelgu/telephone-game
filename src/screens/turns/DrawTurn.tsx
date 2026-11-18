@@ -15,11 +15,13 @@ export const SIZES = [4, 10, 22, 44]
 
 interface Props {
   prompt: string
+  /** handwritten guess shown instead of the prompt text */
+  promptImage?: string
   timer: number
   onSubmit: (image: string, timedOut: boolean) => void
 }
 
-export function DrawTurn({ prompt, timer, onSubmit }: Props) {
+export function DrawTurn({ prompt, promptImage, timer, onSubmit }: Props) {
   const t = useStore((s) => s.t)
   const canvas = useRef<DrawingHandle>(null)
   const area = useRef<HTMLDivElement>(null)
@@ -57,7 +59,11 @@ export function DrawTurn({ prompt, timer, onSubmit }: Props) {
       <div className="prompt-bar">
         <div className="prompt">
           <span className="prompt-label">{t('stepDraw')}</span>
-          <span className="prompt-text">{prompt || t('nothing')}</span>
+          {promptImage ? (
+            <img className="prompt-handwriting" src={promptImage} alt={prompt} draggable={false} />
+          ) : (
+            <span className="prompt-text">{prompt || t('nothing')}</span>
+          )}
         </div>
         <TimerBadge remaining={remaining} />
         <button className="btn btn-primary" onClick={done}>

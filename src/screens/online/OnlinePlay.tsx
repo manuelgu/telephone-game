@@ -57,6 +57,7 @@ export function OnlinePlay({ room, you, onLeave }: { room: PublicRoom; you: stri
         <DrawTurn
           key={`s${activeTurn.step}`}
           prompt={activeTurn.previous?.text ?? ''}
+          promptImage={activeTurn.previous?.kind === 'guess' ? activeTurn.previous.image : undefined}
           timer={secondsLeft(room.stepEndsAt)}
           onSubmit={(image, timedOut) => submit(activeTurn, { image, timedOut })}
         />
@@ -66,7 +67,7 @@ export function OnlinePlay({ room, you, onLeave }: { room: PublicRoom; you: stri
           key={`s${activeTurn.step}`}
           image={activeTurn.previous?.image}
           timer={secondsLeft(room.stepEndsAt)}
-          onSubmit={(text, timedOut) => submit(activeTurn, { text, timedOut })}
+          onSubmit={(guess, timedOut) => submit(activeTurn, { ...guess, timedOut })}
         />
       )}
       {!activeTurn && <Waiting key={`w${room.step}`} room={room} you={you} />}

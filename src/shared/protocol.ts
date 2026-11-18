@@ -9,7 +9,7 @@ export const DEADLINE_GRACE_MS = 8000
 export const MAX_IMAGE_CHARS = 1_400_000
 
 /** allowed timer settings in seconds, 0 = off */
-export const TIMER_OPTIONS = [0, 30, 60, 90, 120, 180]
+export const TIMER_OPTIONS = [0, 15, 30, 45, 60, 90, 120, 180]
 
 /** Resolved number of passes after the starting word (`turns` 0 or above the player count = full circle). */
 export function resolveTotalSteps(turns: number, playerCount: number): number {

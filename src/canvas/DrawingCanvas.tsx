@@ -7,7 +7,8 @@ export interface DrawingHandle {
   redo: () => void
   clear: () => void
   isBlank: () => boolean
-  exportImage: () => string
+  /** `trim`: crop to the ink (plus a margin) instead of exporting the whole canvas */
+  exportImage: (opts?: { trim?: boolean }) => string
 }
 
 interface Props {
@@ -18,6 +19,9 @@ interface Props {
   fingerDraw: boolean
   onPenDetected: () => void
   onHistoryChange: (canUndo: boolean, canRedo: boolean) => void
+  /** canvas resolution, CANVAS_SIZE × CANVAS_SIZE unless set (e.g. the wide handwriting pad) */
+  width?: number
+  height?: number
 }
 
 interface ActiveStroke {
@@ -29,7 +33,7 @@ const TWO_FINGER_TAP_MS = 300
 const TAP_MOVE_TOLERANCE = 12
 
 export const DrawingCanvas = forwardRef<DrawingHandle, Props>(function DrawingCanvas(
-  { tool, color, size, fingerDraw, onPenDetected, onHistoryChange },
+  { tool, color, size, fingerDraw, onPenDetected, onHistoryChange, width = CANVAS_SIZE, height = CANVAS_SIZE },
   ref,
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -73,11 +77,12 @@ export const DrawingCanvas = forwardRef<DrawingHandle, Props>(function DrawingCa
 
   useEffect(() => {
     const off = document.createElement('canvas')
-    off.width = off.height = CANVAS_SIZE
+    off.width = width
+    off.height = height
     committedRef.current = off
     clearCanvas(off.getContext('2d', { willReadFrequently: true })!)
     render()
-  }, [render])
+  }, [render, width, height])
 
   const undo = () => {
     const op = ops.current.pop()
@@ -103,17 +108,18 @@ export const DrawingCanvas = forwardRef<DrawingHandle, Props>(function DrawingCa
       commit({ kind: 'clear' })
     },
     isBlank: () => isBlank(ops.current),
-    exportImage() {
+    exportImage(opts) {
       // finish any in-progress stroke first (e.g. timer ran out mid-line)
       if (active.current) {
         const op = active.current.op
         active.current = null
         commit(op)
       }
+      const source = opts?.trim ? trimToInk(committedRef.current!) : committedRef.current!
       // the server drops drawings above MAX_IMAGE_CHARS: step the quality down until it fits
       let url = ''
       for (const q of [0.85, 0.7, 0.55, 0.4, 0.25]) {
-        url = committedRef.current!.toDataURL('image/jpeg', q)
+        url = source.toDataURL('image/jpeg', q)
         if (url.length < MAX_IMAGE_CHARS) break
       }
       return url
@@ -123,8 +129,8 @@ export const DrawingCanvas = forwardRef<DrawingHandle, Props>(function DrawingCa
   const toCanvas = (e: { clientX: number; clientY: number }) => {
     const rect = canvasRef.current!.getBoundingClientRect()
     return [
-      ((e.clientX - rect.left) / rect.width) * CANVAS_SIZE,
-      ((e.clientY - rect.top) / rect.height) * CANVAS_SIZE,
+      ((e.clientX - rect.left) / rect.width) * width,
+      ((e.clientY - rect.top) / rect.height) * height,
     ]
   }
 
@@ -243,8 +249,8 @@ export const DrawingCanvas = forwardRef<DrawingHandle, Props>(function DrawingCa
     <canvas
       ref={canvasRef}
       className="drawing-canvas"
-      width={CANVAS_SIZE}
-      height={CANVAS_SIZE}
+      width={width}
+      height={height}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -253,3 +259,36 @@ export const DrawingCanvas = forwardRef<DrawingHandle, Props>(function DrawingCa
     />
   )
 })
+
+/** Copy of `src` cropped to its non-paper pixels plus a margin (the whole canvas if it is blank). */
+function trimToInk(src: HTMLCanvasElement): HTMLCanvasElement {
+  const { width: w, height: h } = src
+  const data = src.getContext('2d', { willReadFrequently: true })!.getImageData(0, 0, w, h).data
+  let x0 = w
+  let y0 = h
+  let x1 = -1
+  let y1 = -1
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const i = (y * w + x) * 4
+      // paper is white: anything clearly darker counts as ink
+      if (data[i] < 235 || data[i + 1] < 235 || data[i + 2] < 235) {
+        if (x < x0) x0 = x
+        if (x > x1) x1 = x
+        if (y < y0) y0 = y
+        if (y > y1) y1 = y
+      }
+    }
+  }
+  if (x1 < 0) return src
+  const m = 24
+  x0 = Math.max(0, x0 - m)
+  y0 = Math.max(0, y0 - m)
+  x1 = Math.min(w - 1, x1 + m)
+  y1 = Math.min(h - 1, y1 + m)
+  const out = document.createElement('canvas')
+  out.width = x1 - x0 + 1
+  out.height = y1 - y0 + 1
+  out.getContext('2d')!.drawImage(src, x0, y0, out.width, out.height, 0, 0, out.width, out.height)
+  return out
+}

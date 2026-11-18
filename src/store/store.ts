@@ -47,7 +47,7 @@ function loadSetup(): SetupPrefs {
   } catch {
     /* ignore */
   }
-  return { names: ['', '', ''], timer: 90, turns: 'full', style: 'books' }
+  return { names: ['', '', ''], timer: 30, turns: 'full', style: 'books' }
 }
 
 interface State {
@@ -84,7 +84,10 @@ function summarize(game: Game): HistoryEntry {
     players: game.players.map((p) => p.name),
     preview: game.books.map((b) => ({
       start: b.pages[0]?.text ?? '',
-      end: [...b.pages].reverse().find((p) => p.text)?.text ?? '',
+      end: (() => {
+        const last = [...b.pages].reverse().find((p) => p.text || (p.kind === 'guess' && p.image))
+        return last?.text || (last ? '✍️' : '')
+      })(),
     })),
   }
 }
