@@ -38,12 +38,22 @@ export interface SetupPrefs {
   timer: number
   turns: number | 'full'
   style?: GameStyle
+  /** prefs version: 2 = saved after the default timer became 30s */
+  v?: number
 }
+
+const SETUP_VERSION = 2
+/** timer default before v2: prefs saved with it most likely never chose a timer */
+const OLD_DEFAULT_TIMER = 90
 
 function loadSetup(): SetupPrefs {
   try {
     const raw = localStorage.getItem(SETUP_KEY)
-    if (raw) return JSON.parse(raw)
+    if (raw) {
+      const prefs = JSON.parse(raw) as SetupPrefs
+      if ((prefs.v ?? 1) < SETUP_VERSION && prefs.timer === OLD_DEFAULT_TIMER) prefs.timer = 30
+      return prefs
+    }
   } catch {
     /* ignore */
   }
@@ -151,7 +161,7 @@ export const useStore = create<State>((setState, getState) => ({
 
   saveSetup: (setup) => {
     try {
-      localStorage.setItem(SETUP_KEY, JSON.stringify(setup))
+      localStorage.setItem(SETUP_KEY, JSON.stringify({ ...setup, v: SETUP_VERSION }))
     } catch {
       /* ignore */
     }
